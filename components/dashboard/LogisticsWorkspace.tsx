@@ -10,6 +10,7 @@ import {
   ModuleTabs,
   type ModuleTabId,
 } from "@/components/dashboard/ModuleTabs";
+import { SoulPrintAiPanel } from "@/components/dashboard/SoulPrintAiPanel";
 import { VigilAiPanel } from "@/components/dashboard/VigilAiPanel";
 import {
   getAnnualLeakage,
@@ -33,6 +34,7 @@ export function LogisticsWorkspace() {
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const [progressPercent, setProgressPercent] = useState(0);
   const [modulesUnlocked, setModulesUnlocked] = useState(false);
+  const [ownershipActive, setOwnershipActive] = useState(false);
   const timersRef = useRef<number[]>([]);
 
   useEffect(() => {
@@ -86,7 +88,10 @@ export function LogisticsWorkspace() {
 
   return (
     <div className="space-y-5">
-      <LeakageAlert annualLeakage={annualLeakage} />
+      <LeakageAlert
+        annualLeakage={annualLeakage}
+        ownershipActive={ownershipActive}
+      />
 
       <ModuleTabs
         activeTab={activeTab}
@@ -104,13 +109,9 @@ export function LogisticsWorkspace() {
           onSync={handleSync}
         />
       ) : activeTab === "vigil-ai" ? (
-        <VigilAiPanel />
+        <VigilAiPanel onOwnershipChange={setOwnershipActive} />
       ) : (
-        <div className="flex min-h-[240px] items-center justify-center rounded-lg border border-dashed border-amfah-border bg-amfah-card/40">
-          <p className="text-sm text-amfah-muted">
-            SoulPrint AI module unlocked — content coming next.
-          </p>
-        </div>
+        <SoulPrintAiPanel />
       )}
     </div>
   );
