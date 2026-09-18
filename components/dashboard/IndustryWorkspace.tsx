@@ -12,11 +12,11 @@ import {
 } from "@/components/dashboard/ModuleTabs";
 import { SoulPrintAiPanel } from "@/components/dashboard/SoulPrintAiPanel";
 import { VigilAiPanel } from "@/components/dashboard/VigilAiPanel";
+import type { IndustryId } from "@/lib/dashboard/industries";
 import {
   getAnnualLeakage,
-  LOGISTICS_LEGACY_ROWS,
-  LOGISTICS_SYNC_BUTTON_LABEL,
-} from "@/lib/dashboard/logisticsMockData";
+  getIndustryWorkspace,
+} from "@/lib/dashboard/industryMockData";
 
 const SYNC_MESSAGES = [
   "Interposing Hardware Layer...",
@@ -27,8 +27,14 @@ const SYNC_MESSAGES = [
 const MESSAGE_INTERVAL_MS = 1000;
 const SYNC_DURATION_MS = 3000;
 
-export function LogisticsWorkspace() {
-  const annualLeakage = getAnnualLeakage(LOGISTICS_LEGACY_ROWS);
+type IndustryWorkspaceProps = {
+  industryId: IndustryId;
+};
+
+export function IndustryWorkspace({ industryId }: IndustryWorkspaceProps) {
+  const workspace = getIndustryWorkspace(industryId);
+  const annualLeakage = getAnnualLeakage(workspace.rows);
+
   const [activeTab, setActiveTab] = useState<ModuleTabId>("legacy-sync");
   const [syncPhase, setSyncPhase] = useState<SyncPhase>("idle");
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
@@ -44,6 +50,17 @@ export function LogisticsWorkspace() {
     };
   }, []);
 
+  useEffect(() => {
+    timersRef.current.forEach((timerId) => window.clearTimeout(timerId));
+    timersRef.current = [];
+    setActiveTab("legacy-sync");
+    setSyncPhase("idle");
+    setProgressMessage(null);
+    setProgressPercent(0);
+    setModulesUnlocked(false);
+    setOwnershipActive(false);
+  }, [industryId]);
+
   function clearScheduledTimers() {
     timersRef.current.forEach((timerId) => window.clearTimeout(timerId));
     timersRef.current = [];
@@ -57,9 +74,7 @@ export function LogisticsWorkspace() {
     clearScheduledTimers();
     setSyncPhase("running");
     setProgressMessage(SYNC_MESSAGES[0]);
-    setProgressPercent(
-      Math.round(((0 + 1) / SYNC_MESSAGES.length) * 100),
-    );
+    setProgressPercent(Math.round((1 / SYNC_MESSAGES.length) * 100));
 
     SYNC_MESSAGES.forEach((message, index) => {
       if (index === 0) {
@@ -101,8 +116,8 @@ export function LogisticsWorkspace() {
 
       {activeTab === "legacy-sync" ? (
         <LegacySyncPanel
-          syncButtonLabel={LOGISTICS_SYNC_BUTTON_LABEL}
-          rows={LOGISTICS_LEGACY_ROWS}
+          syncButtonLabel={workspace.syncButtonLabel}
+          rows={workspace.rows}
           syncPhase={syncPhase}
           progressMessage={progressMessage}
           progressPercent={progressPercent}
@@ -111,7 +126,7 @@ export function LogisticsWorkspace() {
       ) : activeTab === "vigil-ai" ? (
         <VigilAiPanel onOwnershipChange={setOwnershipActive} />
       ) : (
-        <SoulPrintAiPanel />
+        <SoulPrintAiPanel onOwnershipChange={setOwnershipActive} />
       )}
     </div>
   );

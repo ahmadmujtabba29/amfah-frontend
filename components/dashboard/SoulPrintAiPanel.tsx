@@ -209,7 +209,13 @@ function LiveMetricChart({
   );
 }
 
-export function SoulPrintAiPanel() {
+type SoulPrintAiPanelProps = {
+  onOwnershipChange?: (active: boolean) => void;
+};
+
+export function SoulPrintAiPanel({
+  onOwnershipChange,
+}: SoulPrintAiPanelProps) {
   const [phase, setPhase] = useState<SoulPrintPhase>("monitoring");
   const [score, setScore] = useState(NORMAL_SCORE);
   const [series, setSeries] = useState<Record<MetricKey, number[]>>(() => ({
@@ -230,6 +236,15 @@ export function SoulPrintAiPanel() {
   const phaseRef = useRef<SoulPrintPhase>("monitoring");
   const activityBoostRef = useRef(0);
   const hijackTimersRef = useRef<number[]>([]);
+  const onOwnershipChangeRef = useRef(onOwnershipChange);
+
+  useEffect(() => {
+    onOwnershipChangeRef.current = onOwnershipChange;
+  }, [onOwnershipChange]);
+
+  useEffect(() => {
+    onOwnershipChangeRef.current?.(true);
+  }, []);
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -310,6 +325,7 @@ export function SoulPrintAiPanel() {
 
     clearHijackTimers();
     setPhase("hijacking");
+    onOwnershipChange?.(false);
 
     const steps = 20;
     const stepMs = HIJACK_DURATION_MS / steps;
@@ -336,6 +352,7 @@ export function SoulPrintAiPanel() {
     clearHijackTimers();
     setScore(NORMAL_SCORE);
     setPhase("monitoring");
+    onOwnershipChange?.(true);
     setSeries({
       dwell: createSeries(
         METRIC_CONFIG.dwell.baseline,

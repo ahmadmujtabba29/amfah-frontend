@@ -1,5 +1,5 @@
 import { AlertIcon, CheckCircleIcon } from "@/components/dashboard/icons";
-import { formatCurrency } from "@/lib/dashboard/logisticsMockData";
+import { formatCurrency } from "@/lib/dashboard/industryMockData";
 
 type LeakageAlertProps = {
   annualLeakage: number;
@@ -21,8 +21,8 @@ export function LeakageAlert({
             INFRASTRUCTURE PROPERTY: OWNERSHIP ACTIVE
           </p>
           <p className="mt-1 text-xs text-emerald-100/80 sm:text-sm">
-            Vigil AI audit confirmed cryptographic integrity. Legacy seat leakage
-            of {formatCurrency(annualLeakage)} is now under proprietary control.
+            Provenance and biometric assurance confirmed. Legacy seat leakage of{" "}
+            {formatCurrency(annualLeakage)} is now under proprietary control.
           </p>
         </div>
       </div>

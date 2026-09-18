@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { LogisticsWorkspace } from "@/components/dashboard/LogisticsWorkspace";
+import { IndustryWorkspace } from "@/components/dashboard/IndustryWorkspace";
 import {
   getIndustryById,
   type IndustryId,
@@ -35,14 +35,8 @@ export function DashboardShell() {
                 Select a domain from the sidebar to open the workspace.
               </p>
             </div>
-          ) : selectedIndustryId === "logistics" ? (
-            <LogisticsWorkspace />
           ) : (
-            <div className="flex h-full min-h-[280px] items-center justify-center rounded-lg border border-dashed border-amfah-border">
-              <p className="text-sm text-amfah-muted">
-                {selectedIndustry?.title} workspace UI will be added next.
-              </p>
-            </div>
+            <IndustryWorkspace industryId={selectedIndustryId} />
           )}
         </main>
       </div>

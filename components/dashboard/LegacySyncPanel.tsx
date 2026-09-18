@@ -2,7 +2,7 @@ import { Button } from "@/components/Button";
 import {
   formatCurrency,
   type LegacySeatRow,
-} from "@/lib/dashboard/logisticsMockData";
+} from "@/lib/dashboard/industryMockData";
 
 export type SyncPhase = "idle" | "running" | "complete";
 
@@ -115,6 +115,7 @@ export function LegacySyncPanel({
               <tr>
                 <th className="px-4 py-3 font-medium sm:px-5">Company</th>
                 <th className="px-4 py-3 font-medium sm:px-5">Postcode</th>
+                <th className="px-4 py-3 font-medium sm:px-5">Phone</th>
                 <th className="px-4 py-3 font-medium sm:px-5">Seats</th>
                 <th className="px-4 py-3 font-medium sm:px-5">£/Seat</th>
                 <th className="px-4 py-3 font-medium sm:px-5">Annual Cost</th>
@@ -132,6 +133,9 @@ export function LegacySyncPanel({
                     <td className="px-4 py-3 sm:px-5">{row.company}</td>
                     <td className="px-4 py-3 whitespace-nowrap text-amfah-muted sm:px-5">
                       {row.postcode}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-amfah-muted sm:px-5">
+                      {row.phone}
                     </td>
                     <td className="px-4 py-3 sm:px-5">{row.seats}</td>
                     <td className="px-4 py-3 whitespace-nowrap sm:px-5">
