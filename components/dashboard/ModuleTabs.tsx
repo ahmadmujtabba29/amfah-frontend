@@ -25,42 +25,44 @@ export function ModuleTabs({
   onTabChange,
 }: ModuleTabsProps) {
   return (
-    <div
-      className="flex flex-wrap gap-1 border-b border-amfah-border"
-      role="tablist"
-      aria-label="Operational modules"
-    >
-      {TABS.map((tab) => {
-        const isActive = tab.id === activeTab;
-        const isLocked = tab.id !== "legacy-sync" && !modulesUnlocked;
+    <div className="border-b border-amfah-border">
+      <div
+        className="amfah-no-scrollbar -mx-1 flex gap-1 overflow-x-auto px-1"
+        role="tablist"
+        aria-label="Operational modules"
+      >
+        {TABS.map((tab) => {
+          const isActive = tab.id === activeTab;
+          const isLocked = tab.id !== "legacy-sync" && !modulesUnlocked;
 
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={isActive}
-            disabled={isLocked}
-            title={isLocked ? "Complete Legacy Sync to unlock" : undefined}
-            onClick={() => {
-              if (!isLocked) {
-                onTabChange(tab.id);
-              }
-            }}
-            className={[
-              "inline-flex items-center gap-2 border-b-2 px-3 py-3 text-sm font-medium transition sm:px-4",
-              isActive
-                ? "border-amfah-gold text-amfah-gold"
-                : isLocked
-                  ? "cursor-not-allowed border-transparent text-amfah-muted/50"
-                  : "border-transparent text-amfah-muted hover:text-white",
-            ].join(" ")}
-          >
-            {isLocked ? <LockIcon className="h-3.5 w-3.5" /> : null}
-            {tab.label}
-          </button>
-        );
-      })}
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              disabled={isLocked}
+              title={isLocked ? "Complete Legacy Sync to unlock" : undefined}
+              onClick={() => {
+                if (!isLocked) {
+                  onTabChange(tab.id);
+                }
+              }}
+              className={[
+                "inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-3 text-sm font-medium whitespace-nowrap transition sm:px-4",
+                isActive
+                  ? "border-amfah-gold text-amfah-gold"
+                  : isLocked
+                    ? "cursor-not-allowed border-transparent text-amfah-muted/50"
+                    : "border-transparent text-amfah-muted hover:text-white",
+              ].join(" ")}
+            >
+              {isLocked ? <LockIcon className="h-3.5 w-3.5" /> : null}
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -265,23 +265,23 @@ export function VigilAiPanel({ onOwnershipChange }: VigilAiPanelProps) {
     <div className="space-y-4 rounded-lg border border-amfah-border bg-amfah-card p-4 sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-semibold tracking-[0.16em] text-amfah-muted">
-            VIGIL AI FORENSIC PORTAL
+          <p className="text-xs font-semibold tracking-[0.16em] text-amfah-gold">
+            MODULE A · VIGIL AI FORENSIC PORTAL
           </p>
           <h2 className="mt-1 text-lg font-semibold text-white">
-            Media & Document Provenance
+            Media Provenance
           </h2>
         </div>
 
         <div className="inline-flex items-center gap-3 rounded-md border border-amfah-border bg-amfah-surface px-3 py-2">
           <span className="text-xs text-amfah-muted sm:text-sm">
-            Simulate AI Tampering / Deepfake Attack
+            Simulate AI Tampering/Deepfake Attack
           </span>
           <button
             type="button"
             role="switch"
             aria-checked={simulateTampering}
-            aria-label="Simulate AI Tampering / Deepfake Attack"
+            aria-label="Simulate AI Tampering/Deepfake Attack"
             onClick={handleTamperToggle}
             className={[
               "relative h-6 w-11 rounded-full transition",
@@ -370,10 +370,10 @@ export function VigilAiPanel({ onOwnershipChange }: VigilAiPanelProps) {
           />
           <UploadIcon className="h-10 w-10 text-amfah-gold" />
           <p className="mt-4 text-sm font-medium text-white sm:text-base">
-            Drop Corporate Document, Video, or Invoice Payload for Reality Audit
+            Drop a document or invoice file for the SHA-256 reality audit
           </p>
           <p className="mt-2 text-xs text-amfah-muted">
-            Drag and drop a file here, or click to browse
+            Drag and drop a file here, or click to browse. The Python backend hashes the byte stream.
           </p>
         </label>
       )}
@@ -402,7 +402,7 @@ export function VigilAiPanel({ onOwnershipChange }: VigilAiPanelProps) {
                 FORENSIC STATUS LOG
               </p>
               <span className="text-[10px] uppercase tracking-wider text-amfah-muted">
-                Multi-agent simulation
+                Local Python SHA-256
               </span>
             </div>
             <div className="min-h-[112px] rounded-md border border-amfah-border/80 bg-black/40 px-3 py-3">
@@ -453,10 +453,24 @@ export function VigilAiPanel({ onOwnershipChange }: VigilAiPanelProps) {
                 STATUS: 100% REAL — CRYPTOGRAPHIC INTEGRITY VERIFIED
               </p>
             ) : (
-              <p className="flex items-start gap-2 text-sm font-semibold tracking-wide text-red-300">
-                <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />
-                CRITICAL FRAUD ALERT: DATA MANIPULATION CAUGHT
-              </p>
+              <div className="space-y-2" role="alert">
+                <p className="flex items-start gap-2 text-sm font-semibold tracking-wide text-red-300">
+                  <AlertIcon className="mt-0.5 h-4 w-4 shrink-0" />
+                  CRITICAL FRAUD ALERT: DATA TAMPERING CAUGHT
+                </p>
+                <button
+                  type="button"
+                  disabled={!canDownloadReport || isDownloadingReport}
+                  onClick={() => {
+                    void handleDownloadReport();
+                  }}
+                  className="text-left text-sm font-medium text-amfah-gold underline underline-offset-2 hover:text-amfah-gold-light disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isDownloadingReport
+                    ? "Opening Forensic Validation PDF Certificate..."
+                    : "View Forensic Validation PDF Certificate"}
+                </button>
+              </div>
             )}
           </div>
         )}
@@ -468,19 +482,21 @@ export function VigilAiPanel({ onOwnershipChange }: VigilAiPanelProps) {
         </p>
       ) : null}
 
-      <Button
-        type="button"
-        variant="ghost"
-        fullWidth
-        disabled={!canDownloadReport || isDownloadingReport}
-        onClick={() => {
-          void handleDownloadReport();
-        }}
-      >
-        {isDownloadingReport
-          ? "DOWNLOADING REPORT..."
-          : "Generate Court-Admissible Forensic Validation Report"}
-      </Button>
+      {!isFraud ? (
+        <Button
+          type="button"
+          variant="ghost"
+          fullWidth
+          disabled={!canDownloadReport || isDownloadingReport}
+          onClick={() => {
+            void handleDownloadReport();
+          }}
+        >
+          {isDownloadingReport
+            ? "DOWNLOADING REPORT..."
+            : "Generate Court-Admissible Forensic Validation Report"}
+        </Button>
+      ) : null}
     </div>
   );
 }
