@@ -11,6 +11,11 @@ import {
   type ModuleTabId,
 } from "@/components/dashboard/ModuleTabs";
 import { SoulPrintAiPanel } from "@/components/dashboard/SoulPrintAiPanel";
+import { HealthcareWorkspace } from "@/components/dashboard/healthcare/HealthcareWorkspace";
+import { LegalWorkspace } from "@/components/dashboard/legal/LegalWorkspace";
+import { LogisticsWorkspace } from "@/components/dashboard/logistics/LogisticsWorkspace";
+import { RecruitmentWorkspace } from "@/components/dashboard/recruitment/RecruitmentWorkspace";
+import { WorkspaceFrame } from "@/components/dashboard/WorkspaceTabBar";
 import { VigilAiPanel } from "@/components/dashboard/VigilAiPanel";
 import type { IndustryId } from "@/lib/dashboard/industries";
 import {
@@ -32,6 +37,26 @@ type IndustryWorkspaceProps = {
 };
 
 export function IndustryWorkspace({ industryId }: IndustryWorkspaceProps) {
+  if (industryId === "logistics") {
+    return <LogisticsWorkspace />;
+  }
+
+  if (industryId === "recruitment") {
+    return <RecruitmentWorkspace />;
+  }
+
+  if (industryId === "legal") {
+    return <LegalWorkspace />;
+  }
+
+  if (industryId === "healthcare") {
+    return <HealthcareWorkspace />;
+  }
+
+  return <LegacyIndustryWorkspace industryId={industryId} />;
+}
+
+function LegacyIndustryWorkspace({ industryId }: IndustryWorkspaceProps) {
   const workspace = getIndustryWorkspace(industryId);
   const annualLeakage = getAnnualLeakage(workspace.rows);
 
@@ -102,7 +127,7 @@ export function IndustryWorkspace({ industryId }: IndustryWorkspaceProps) {
   }
 
   return (
-    <div className="space-y-5">
+    <WorkspaceFrame>
       <LeakageAlert
         annualLeakage={annualLeakage}
         ownershipActive={ownershipActive}
@@ -128,6 +153,6 @@ export function IndustryWorkspace({ industryId }: IndustryWorkspaceProps) {
       ) : (
         <SoulPrintAiPanel onOwnershipChange={setOwnershipActive} />
       )}
-    </div>
+    </WorkspaceFrame>
   );
 }

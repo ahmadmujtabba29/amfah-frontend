@@ -2,7 +2,7 @@ export type IndustryId =
   | "logistics"
   | "recruitment"
   | "legal"
-  | "finance";
+  | "healthcare";
 
 export type Industry = {
   id: IndustryId;
@@ -27,9 +27,9 @@ export const INDUSTRIES: Industry[] = [
     title: "Corporate & Commercial Law",
   },
   {
-    id: "finance",
-    label: "Finance",
-    title: "Finance & Accountancy",
+    id: "healthcare",
+    label: "Healthcare",
+    title: "Private Healthcare & Clinical Networks",
   },
 ];
 

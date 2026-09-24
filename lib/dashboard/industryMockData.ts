@@ -59,7 +59,7 @@ const LOGISTICS_ROWS: LegacySeatRow[] = [
     id: "6",
     company: "East Anglia Intermodal",
     postcode: "IP3 0BS",
-    phone: "01473 496 145",
+    phone: "01473 496 0145",
     seats: 22,
     costPerSeat: 170,
   },
@@ -83,7 +83,7 @@ const LOGISTICS_ROWS: LegacySeatRow[] = [
     id: "9",
     company: "Kent Channel Forwarders",
     postcode: "CT21 4NE",
-    phone: "01303 496 201",
+    phone: "01303 496 0201",
     seats: 17,
     costPerSeat: 188,
   },
@@ -174,7 +174,7 @@ const RECRUITMENT_ROWS: LegacySeatRow[] = [
     id: "8",
     company: "Cambridge STEM Placements",
     postcode: "CB1 2JD",
-    phone: "01223 496 380",
+    phone: "01223 496 0380",
     seats: 15,
     costPerSeat: 230,
   },
@@ -273,7 +273,7 @@ const LEGAL_ROWS: LegacySeatRow[] = [
     id: "8",
     company: "Cambridge IP Advisors",
     postcode: "CB2 1TN",
-    phone: "01223 496 580",
+    phone: "01223 496 0580",
     seats: 14,
     costPerSeat: 290,
   },
@@ -297,7 +297,7 @@ const LEGAL_ROWS: LegacySeatRow[] = [
     id: "11",
     company: "Oxford Regulatory Counsel",
     postcode: "OX1 1BN",
-    phone: "01865 496 611",
+    phone: "01865 496 0611",
     seats: 12,
     costPerSeat: 275,
   },
@@ -311,26 +311,26 @@ const LEGAL_ROWS: LegacySeatRow[] = [
   },
 ];
 
-const FINANCE_ROWS: LegacySeatRow[] = [
+const HEALTHCARE_ROWS: LegacySeatRow[] = [
   {
     id: "1",
-    company: "Canary Wharf Advisory",
-    postcode: "E14 5AB",
-    phone: "020 7946 7101",
+    company: "Harley Street Private",
+    postcode: "W1G 6AX",
+    phone: "020 7946 9101",
     seats: 72,
     costPerSeat: 198,
   },
   {
     id: "2",
-    company: "City Ledger Partners",
-    postcode: "EC2V 7EE",
-    phone: "020 7946 7202",
+    company: "Marylebone Specialist Centre",
+    postcode: "W1U 3AA",
+    phone: "020 7946 9102",
     seats: 58,
     costPerSeat: 205,
   },
   {
     id: "3",
-    company: "Manchester Audit Group",
+    company: "Manchester City Clinic",
     postcode: "M2 4WQ",
     phone: "0161 496 7303",
     seats: 36,
@@ -338,7 +338,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "4",
-    company: "Edinburgh Tax Practice",
+    company: "Edinburgh Queensferry Practice",
     postcode: "EH2 4AN",
     phone: "0131 496 7404",
     seats: 24,
@@ -346,7 +346,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "5",
-    company: "Bristol Bookkeeping Hub",
+    company: "Bristol Harbour Clinic",
     postcode: "BS1 5TR",
     phone: "0117 496 7505",
     seats: 29,
@@ -354,7 +354,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "6",
-    company: "Leeds Corporate Finance",
+    company: "Leeds Riverside Clinic",
     postcode: "LS1 2TW",
     phone: "0113 496 7606",
     seats: 31,
@@ -362,7 +362,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "7",
-    company: "Birmingham Payroll Desk",
+    company: "Birmingham Colmore Clinic",
     postcode: "B2 5LG",
     phone: "0121 496 7707",
     seats: 44,
@@ -370,15 +370,15 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "8",
-    company: "Cambridge Growth CFO",
+    company: "Cambridge Science Park Clinic",
     postcode: "CB1 1AH",
-    phone: "01223 496 780",
+    phone: "01223 496 0780",
     seats: 13,
     costPerSeat: 245,
   },
   {
     id: "9",
-    company: "Cardiff Compliance Office",
+    company: "Cardiff Bay Clinic",
     postcode: "CF10 2GA",
     phone: "029 2018 7909",
     seats: 20,
@@ -386,7 +386,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "10",
-    company: "Reading Fund Accounting",
+    company: "Reading Forbury Clinic",
     postcode: "RG1 3EU",
     phone: "0118 496 8010",
     seats: 27,
@@ -394,7 +394,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "11",
-    company: "Glasgow Assurance Team",
+    company: "Glasgow George Square Clinic",
     postcode: "G1 3DX",
     phone: "0141 496 8111",
     seats: 22,
@@ -402,7 +402,7 @@ const FINANCE_ROWS: LegacySeatRow[] = [
   },
   {
     id: "12",
-    company: "Newcastle Mid-Market Audit",
+    company: "Newcastle Quayside Clinic",
     postcode: "NE1 5JF",
     phone: "0191 496 8212",
     seats: 18,
@@ -424,9 +424,9 @@ export const INDUSTRY_WORKSPACES: Record<IndustryId, IndustryWorkspaceConfig> =
       syncButtonLabel: "Decommission Thomson Reuters HighQ Workspace",
       rows: LEGAL_ROWS,
     },
-    finance: {
-      syncButtonLabel: "Decommission Wolters Kluwer CCH Central Modules",
-      rows: FINANCE_ROWS,
+    healthcare: {
+      syncButtonLabel: "Decommission per-doctor EHR seat licenses",
+      rows: HEALTHCARE_ROWS,
     },
   };
 

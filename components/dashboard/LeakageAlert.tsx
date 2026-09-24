@@ -4,15 +4,39 @@ import { formatCurrency } from "@/lib/dashboard/industryMockData";
 type LeakageAlertProps = {
   annualLeakage: number;
   ownershipActive?: boolean;
+  resolved?: boolean;
 };
 
 export function LeakageAlert({
   annualLeakage,
   ownershipActive = false,
+  resolved = false,
 }: LeakageAlertProps) {
+  if (resolved) {
+    return (
+      <div className="flex items-start gap-3 rounded-lg border border-emerald-500/40 bg-emerald-950/45 px-3 py-3 sm:items-center sm:px-5 sm:py-4">
+        <span className="mt-0.5 text-emerald-400 sm:mt-0">
+          <CheckCircleIcon className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold tracking-wide text-emerald-300 sm:text-base">
+            SaaS License Fee Capital Leakage — Fixed
+          </p>
+          <p className="mt-1 text-xs text-emerald-100/80 sm:text-sm">
+            Legacy seat leakage of{" "}
+            <span className="font-semibold text-emerald-50">
+              {formatCurrency(annualLeakage)}
+            </span>{" "}
+            is removed. Incremental license cost is {formatCurrency(0)}.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (ownershipActive) {
     return (
-      <div className="flex items-start gap-3 rounded-lg border border-emerald-500/40 bg-emerald-950/45 px-4 py-4 sm:items-center sm:px-5">
+      <div className="flex items-start gap-3 rounded-lg border border-emerald-500/40 bg-emerald-950/45 px-3 py-3 sm:items-center sm:px-5 sm:py-4">
         <span className="mt-0.5 text-emerald-400 sm:mt-0">
           <CheckCircleIcon className="h-5 w-5" />
         </span>
@@ -30,7 +54,7 @@ export function LeakageAlert({
   }
 
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-red-500/40 bg-red-950/50 px-4 py-4 sm:items-center sm:px-5">
+    <div className="flex items-start gap-3 rounded-lg border border-red-500/40 bg-red-950/50 px-3 py-3 sm:items-center sm:px-5 sm:py-4">
       <span className="mt-0.5 text-red-400 sm:mt-0">
         <AlertIcon className="h-5 w-5" />
       </span>

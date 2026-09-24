@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/api";
 import { Button } from "@/components/Button";
 import { AlertIcon, SirenIcon } from "@/components/dashboard/icons";
 
@@ -15,15 +17,28 @@ const NORMAL_SCORE = 98;
 
 const METRIC_CONFIG: Record<
   MetricKey,
-  { title: string; unit: string; baseline: number; variance: number }
+  { title: string; unit: string; baseline: number; variance: number; flat: number }
 > = {
-  dwell: { title: "Dwell Time", unit: "ms", baseline: 118, variance: 28 },
-  flight: { title: "Flight Time", unit: "ms", baseline: 86, variance: 22 },
+  dwell: {
+    title: "Dwell Time (ms)",
+    unit: "ms",
+    baseline: 118,
+    variance: 28,
+    flat: 40,
+  },
+  flight: {
+    title: "Flight Time (ms)",
+    unit: "ms",
+    baseline: 86,
+    variance: 22,
+    flat: 40,
+  },
   velocity: {
     title: "Mouse Trajectory Arc Velocity",
     unit: "px/s",
     baseline: 340,
     variance: 90,
+    flat: 40,
   },
 };
 
@@ -31,6 +46,10 @@ function createSeries(baseline: number, variance: number): number[] {
   return Array.from({ length: SAMPLE_COUNT }, () =>
     Math.max(8, baseline + (Math.random() - 0.5) * variance * 2),
   );
+}
+
+function createFlatSeries(value: number): number[] {
+  return Array.from({ length: SAMPLE_COUNT }, () => value);
 }
 
 function pushSample(series: number[], nextValue: number): number[] {
@@ -110,16 +129,15 @@ function AuthenticityGauge({
         </div>
       </div>
 
-      <p className="mt-4 text-sm font-medium text-white">
-        Human Authenticity Score
-      </p>
       <p
         className={[
-          "mt-1 text-xs font-semibold tracking-wide",
+          "mt-4 text-center text-sm font-medium",
           tone === "red" ? "text-red-300" : "text-emerald-300",
         ].join(" ")}
       >
-        {tone === "red" ? "Identity Compromised" : "Identity Confirmed"}
+        {tone === "red"
+          ? `Human Authenticity Score: ${Math.round(clamped)}% - Session Compromised`
+          : `Human Authenticity Score: ${Math.round(clamped)}% - Active Session Validated.`}
       </p>
     </div>
   );
@@ -216,6 +234,7 @@ type SoulPrintAiPanelProps = {
 export function SoulPrintAiPanel({
   onOwnershipChange,
 }: SoulPrintAiPanelProps) {
+  const router = useRouter();
   const [phase, setPhase] = useState<SoulPrintPhase>("monitoring");
   const [score, setScore] = useState(NORMAL_SCORE);
   const [series, setSeries] = useState<Record<MetricKey, number[]>>(() => ({
@@ -232,6 +251,7 @@ export function SoulPrintAiPanel({
       METRIC_CONFIG.velocity.variance,
     ),
   }));
+  const [isReturning, setIsReturning] = useState(false);
 
   const phaseRef = useRef<SoulPrintPhase>("monitoring");
   const activityBoostRef = useRef(0);
@@ -271,27 +291,22 @@ export function SoulPrintAiPanel({
     const intervalId = window.setInterval(() => {
       const currentPhase = phaseRef.current;
 
+      if (currentPhase !== "monitoring") {
+        return;
+      }
+
       setSeries((current) => {
         const next = { ...current };
 
         (Object.keys(METRIC_CONFIG) as MetricKey[]).forEach((key) => {
           const config = METRIC_CONFIG[key];
-
-          if (currentPhase === "monitoring") {
-            const boost = activityBoostRef.current;
-            const jitter =
-              (Math.random() - 0.5) * config.variance * (1.1 + boost);
-            const value = Math.max(
-              8,
-              config.baseline + jitter + boost * config.variance * 0.4,
-            );
-            next[key] = pushSample(current[key], value);
-            return;
-          }
-
-          const flatTarget = config.baseline * 0.18;
-          const previous = current[key][current[key].length - 1] ?? flatTarget;
-          const value = previous * 0.72 + flatTarget * 0.28;
+          const boost = activityBoostRef.current;
+          const jitter =
+            (Math.random() - 0.5) * config.variance * (1.1 + boost);
+          const value = Math.max(
+            8,
+            config.baseline + jitter + boost * config.variance * 0.4,
+          );
           next[key] = pushSample(current[key], value);
         });
 
@@ -327,6 +342,12 @@ export function SoulPrintAiPanel({
     setPhase("hijacking");
     onOwnershipChange?.(false);
 
+    setSeries({
+      dwell: createFlatSeries(METRIC_CONFIG.dwell.flat),
+      flight: createFlatSeries(METRIC_CONFIG.flight.flat),
+      velocity: createFlatSeries(METRIC_CONFIG.velocity.flat),
+    });
+
     const steps = 20;
     const stepMs = HIJACK_DURATION_MS / steps;
 
@@ -341,6 +362,7 @@ export function SoulPrintAiPanel({
         if (step === steps) {
           setScore(0);
           setPhase("locked");
+          void logout().catch(() => undefined);
         }
       }, step * stepMs);
 
@@ -348,25 +370,17 @@ export function SoulPrintAiPanel({
     }
   }
 
-  function handleReset() {
-    clearHijackTimers();
-    setScore(NORMAL_SCORE);
-    setPhase("monitoring");
-    onOwnershipChange?.(true);
-    setSeries({
-      dwell: createSeries(
-        METRIC_CONFIG.dwell.baseline,
-        METRIC_CONFIG.dwell.variance,
-      ),
-      flight: createSeries(
-        METRIC_CONFIG.flight.baseline,
-        METRIC_CONFIG.flight.variance,
-      ),
-      velocity: createSeries(
-        METRIC_CONFIG.velocity.baseline,
-        METRIC_CONFIG.velocity.variance,
-      ),
-    });
+  async function handleReturnToSignIn() {
+    setIsReturning(true);
+
+    try {
+      await logout();
+    } catch {
+      // Navigation still clears the frozen session.
+    } finally {
+      router.push("/");
+      router.refresh();
+    }
   }
 
   const compromised = phase !== "monitoring";
@@ -376,11 +390,11 @@ export function SoulPrintAiPanel({
     <>
       <div className="space-y-4 rounded-lg border border-amfah-border bg-amfah-card p-4 sm:p-5">
         <div>
-          <p className="text-xs font-semibold tracking-[0.16em] text-amfah-muted">
-            SOULPRINT AI BEHAVIORAL BIOMETRICS
+          <p className="text-xs font-semibold tracking-[0.16em] text-amfah-gold">
+            MODULE B · SOULPRINT AI MONITOR
           </p>
           <h2 className="mt-1 text-lg font-semibold text-white">
-            Continuous Identity Assurance
+            Continuous Authentication
           </h2>
         </div>
 
@@ -402,9 +416,12 @@ export function SoulPrintAiPanel({
         </div>
 
         {phase === "hijacking" ? (
-          <div className="flex items-start gap-2 rounded-md border border-red-500/40 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+          <div
+            className="amfah-hazard-flash flex items-start gap-2 rounded-md border border-red-500/50 bg-red-950/50 px-4 py-3 text-sm text-red-100"
+            role="alert"
+          >
             <AlertIcon className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
-            Robotic script injection detected — authenticity collapsing…
+            HAZARD: Bot script injection detected — authenticity collapsing to 0%
           </div>
         ) : null}
 
@@ -416,7 +433,7 @@ export function SoulPrintAiPanel({
           onClick={handleHijack}
           className="border-red-500/40 text-red-300 hover:border-red-400 hover:text-red-200"
         >
-          Simulate Session Hijack / Robotic Script Injection
+          Simulate Session Hijack / Bot Script Injection
         </Button>
       </div>
 
@@ -440,18 +457,21 @@ export function SoulPrintAiPanel({
               id="soulprint-lockdown-desc"
               className="mt-3 text-sm text-red-100/85"
             >
-              Robotic Script Injection Detected — Identity Score 0%
+              Bot Script Injection Detected — Human Authenticity Score: 0%
             </p>
             <p className="mt-2 text-xs text-amfah-muted">
-              Continuous biometric stream interrupted. Terminal access frozen.
+              Continuous biometric stream interrupted. The interface is frozen and the session token has been cleared.
             </p>
             <Button
               type="button"
               variant="ghost"
               className="mt-6 border-red-500/40 text-red-200 hover:border-red-400 hover:text-white"
-              onClick={handleReset}
+              disabled={isReturning}
+              onClick={() => {
+                void handleReturnToSignIn();
+              }}
             >
-              Reset Biometric Stream
+              {isReturning ? "RETURNING..." : "Return to Sign-In"}
             </Button>
           </div>
         </div>
