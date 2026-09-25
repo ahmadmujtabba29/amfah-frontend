@@ -150,25 +150,25 @@ export function StreetCorridorMap({
         </text>
         <rect x="150" y="470" width="130" height="78" rx="8" fill="#1a2820" />
 
-        <StreetLabel x="118" y="148" text="Dock Rd" />
-        <StreetLabel x="250" y="206" text="Wharf St" />
-        <StreetLabel x="420" y="264" text="Canal Way" />
-        <StreetLabel x="640" y="326" text="Port St" />
-        <StreetLabel x="800" y="388" text="Haul Ln" />
-        <StreetLabel x="200" y="450" text="Quay Approach" />
-        <StreetLabel x="720" y="510" text="Bond St" />
-        <StreetLabel x="130" y="322" text="Mill Ln" rotate={-90} />
-        <StreetLabel x="340" y="250" text="Pier Rd" rotate={-90} />
-        <StreetLabel x="790" y="210" text="Albert Rd" rotate={-90} />
+        <StreetLabel x={118} y={148} text="Dock Rd" />
+        <StreetLabel x={250} y={206} text="Wharf St" />
+        <StreetLabel x={420} y={264} text="Canal Way" />
+        <StreetLabel x={640} y={326} text="Port St" />
+        <StreetLabel x={800} y={388} text="Haul Ln" />
+        <StreetLabel x={200} y={450} text="Quay Approach" />
+        <StreetLabel x={720} y={510} text="Bond St" />
+        <StreetLabel x={130} y={322} text="Mill Ln" rotate={-90} />
+        <StreetLabel x={340} y={250} text="Pier Rd" rotate={-90} />
+        <StreetLabel x={790} y={210} text="Albert Rd" rotate={-90} />
 
-        <AreaLabel x="120" y="250" text="WHARF QUARTER" />
-        <AreaLabel x="250" y="560" text="PORT EAST" />
-        <AreaLabel x="700" y="180" text="DOCKLANDS" />
-        <AreaLabel x="760" y="430" text="CUSTOMS YARD" />
+        <AreaLabel x={120} y={250} text="WHARF QUARTER" />
+        <AreaLabel x={250} y={560} text="PORT EAST" />
+        <AreaLabel x={700} y={180} text="DOCKLANDS" />
+        <AreaLabel x={760} y={430} text="CUSTOMS YARD" />
 
-        <Poi x="410" y="200" name="Freight Gate" />
-        <Poi x="690" y="470" name="Bonded Yard" />
-        <Poi x="250" y="360" name="Haul Office" />
+        <Poi x={410} y={200} name="Freight Gate" />
+        <Poi x={690} y={470} name="Bonded Yard" />
+        <Poi x={250} y={360} name="Haul Office" />
 
         <path d={routePath} fill="none" stroke="#6a5820" strokeWidth="10" strokeLinejoin="round" strokeLinecap="round" />
         <path
