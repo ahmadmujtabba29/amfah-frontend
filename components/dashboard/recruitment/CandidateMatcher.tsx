@@ -119,7 +119,7 @@ export function CandidateMatcher() {
         </div>
         <ul className="amfah-scroll max-h-[640px] divide-y divide-amfah-border/80 overflow-y-auto">
           {ranked.map((candidate, index) => {
-            const profile = CANDIDATES.find((item) => item.id === candidate.id) as CandidateProfile;
+            const profile = profiles.find((item) => item.id === candidate.id);
 
             return (
               <li key={candidate.id} className="px-4 py-4 sm:px-5">
@@ -129,7 +129,9 @@ export function CandidateMatcher() {
                       {index + 1}. {candidate.name}
                     </p>
                     <p className="mt-1 text-xs text-amfah-muted">
-                      {profile.title} · {profile.city} {profile.postcode}
+                      {profile
+                        ? `${profile.title} · ${profile.city}${profile.postcode ? ` ${profile.postcode}` : ""}`
+                        : "Uploaded profile"}
                     </p>
                   </div>
                   <p className="text-lg font-semibold text-amfah-gold">{candidate.score}%</p>
